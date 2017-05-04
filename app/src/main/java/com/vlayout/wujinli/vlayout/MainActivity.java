@@ -1,20 +1,27 @@
 package com.vlayout.wujinli.vlayout;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixAreaLayoutHelper;
 import com.alibaba.android.vlayout.layout.FixLayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
+import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.ScrollFixLayoutHelper;
+import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
+import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 import com.vlayout.wujinli.vlayout.adapter.MyAdapter_DelegateAdapter;
 
@@ -25,8 +32,17 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements MyItemClickListener {
     private RecyclerView recycler_view;
     private List<HashMap<String, Object>> listItem;
-    private MyAdapter_DelegateAdapter adapter_linearLayout, adapter_stickyLayout,
-            adapter_scrollFixLayout, adapter_gridLayout, adapter_floatLayout,adapter_fixLayout;
+    private MyAdapter_DelegateAdapter
+                                        adapter_linearLayout,
+                                        adapter_stickyLayout,
+                                        adapter_scrollFixLayout,
+                                        adapter_gridLayout,
+                                        adapter_floatLayout,
+                                        adapter_fixLayout,
+                                        adapter_columnLayou,
+                                        adapter_singleLayout,
+                                        adapter_onePlusNLayout,
+                                        adapter_staggeredGridLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,11 +326,11 @@ public class MainActivity extends AppCompatActivity implements MyItemClickListen
         fixLayoutHelper.setX(30);
         fixLayoutHelper.setY(30);
 
-        adapter_fixLayout=new MyAdapter_DelegateAdapter(this,fixLayoutHelper,1,listItem){
+        adapter_fixLayout = new MyAdapter_DelegateAdapter(this, fixLayoutHelper, 1, listItem) {
             @Override
             public void onBindViewHolder(MainViewHolder holder, int position) {
                 super.onBindViewHolder(holder, position);
-                if (position==0){
+                if (position == 0) {
                     holder.Item.setText("FixLayout");
                 }
             }
@@ -323,6 +339,141 @@ public class MainActivity extends AppCompatActivity implements MyItemClickListen
         adapter_fixLayout.setOnItemClickListener(this);
 
 
+        /**
+         * 设置栏格布局
+         */
+
+        ColumnLayoutHelper columnLayoutHelper = new ColumnLayoutHelper();
+
+        //公共属性
+        columnLayoutHelper.setItemCount(3);
+        columnLayoutHelper.setPadding(20, 20, 20, 20);
+        columnLayoutHelper.setMargin(20, 20, 20, 20);
+        columnLayoutHelper.setBgColor(Color.GRAY);
+        columnLayoutHelper.setAspectRatio(6);
+
+        //特有属性
+        columnLayoutHelper.setWeights(new float[]{30, 40, 30});//设置每个item 的占该行宽度的总比例
+
+        adapter_columnLayou = new MyAdapter_DelegateAdapter(this, columnLayoutHelper, 3, listItem) {
+            @Override
+            public void onBindViewHolder(MainViewHolder holder, int position) {
+                super.onBindViewHolder(holder, position);
+                if (position == 0) {
+                    holder.Item.setText("ColumnLayout");
+                }
+            }
+        };
+
+        adapter_columnLayou.setOnItemClickListener(this);
+
+        /**
+         * 设置通栏布局
+         */
+
+        SingleLayoutHelper singleLayoutHelper = new SingleLayoutHelper();
+
+        //公共属性
+
+        singleLayoutHelper.setItemCount(3);
+        singleLayoutHelper.setPadding(20, 20, 20, 20);
+        singleLayoutHelper.setMargin(20, 20, 20, 20);
+        singleLayoutHelper.setAspectRatio(6);
+        singleLayoutHelper.setBgColor(Color.GRAY);
+
+        adapter_singleLayout = new MyAdapter_DelegateAdapter(this, singleLayoutHelper, 3,
+                listItem) {
+            @Override
+            public void onBindViewHolder(MainViewHolder holder, int position) {
+                super.onBindViewHolder(holder, position);
+                if (position == 0) {
+                    holder.Item.setText("SingleLayout");
+                }
+            }
+        };
+
+        adapter_singleLayout.setOnItemClickListener(this);
+
+
+        /**
+         *  设置1拖N布局
+         */
+
+        // 在构造函数里传入显示的Item数
+        // 最多是1拖4,即5个
+        OnePlusNLayoutHelper onePlusNLayoutHelper = new OnePlusNLayoutHelper(5);
+
+        onePlusNLayoutHelper.setItemCount(3);
+        onePlusNLayoutHelper.setPadding(20, 20, 20, 20);
+        onePlusNLayoutHelper.setMargin(20, 20, 20, 20);
+        onePlusNLayoutHelper.setBgColor(Color.GRAY);
+        onePlusNLayoutHelper.setAspectRatio(3);
+
+        adapter_onePlusNLayout = new MyAdapter_DelegateAdapter(this, onePlusNLayoutHelper, 5,
+                listItem) {
+            @Override
+            public void onBindViewHolder(MainViewHolder holder, int position) {
+                super.onBindViewHolder(holder, position);
+                if (position == 0) {
+                    holder.Item.setText("OnePlusNLayout");
+                }
+            }
+        };
+
+        adapter_onePlusNLayout.setOnItemClickListener(this);
+
+
+        /**
+         * 设置瀑布流布局
+         */
+
+        StaggeredGridLayoutHelper staggeredGridLayoutHelper = new StaggeredGridLayoutHelper();
+
+        staggeredGridLayoutHelper.setItemCount(20);
+        staggeredGridLayoutHelper.setPadding(20, 20, 20, 20);//
+        // 设置LayoutHelper的子元素相对LayoutHelper边缘的距离
+        staggeredGridLayoutHelper.setMargin(20, 20, 20, 20);
+        //设置LayoutHelper边缘相对父控件（即RecyclerView）的距离
+        staggeredGridLayoutHelper.setBgColor(Color.GRAY);
+        staggeredGridLayoutHelper.setAspectRatio(3);//设置设置布局内每行布局的宽与高的比
+
+        // 特有属性
+        staggeredGridLayoutHelper.setLane(3);// 设置控制瀑布流每行的Item数
+        staggeredGridLayoutHelper.setHGap(20);// 设置子元素之间的水平间距
+        staggeredGridLayoutHelper.setVGap(15);// 设置子元素之间的垂直间距
+
+        adapter_staggeredGridLayout = new MyAdapter_DelegateAdapter(this,
+                staggeredGridLayoutHelper, 20, listItem) {
+
+            @Override
+            public void onBindViewHolder(MainViewHolder holder, int position) {
+                super.onBindViewHolder(holder, position);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup
+                        .LayoutParams.MATCH_PARENT, 150 + position % 5 * 20);
+                holder.itemView.setLayoutParams(layoutParams);
+
+
+                // 为了展示效果,设置不同位置的背景色
+                if (position > 10) {
+                    holder.itemView.setBackgroundColor(0x66cc0000 + (position - 6) * 128);
+                } else if (position % 2 == 0) {
+                    holder.itemView.setBackgroundColor(0xaa22ff22);
+                } else {
+                    holder.itemView.setBackgroundColor(0xccff22ff);
+                }
+
+                if (position == 0) {
+                    holder.Item.setText("StaggeredGridLayout");
+                }
+            }
+        };
+
+        adapter_staggeredGridLayout.setOnItemClickListener(this);
+
+
+        /**
+         * 步骤5:将生成的LayoutHelper 交给Adapter，并绑定到RecyclerView 对象
+         */
         List<DelegateAdapter.Adapter> adapters = new ArrayList<>();
 
         adapters.add(adapter_linearLayout);
@@ -331,21 +482,41 @@ public class MainActivity extends AppCompatActivity implements MyItemClickListen
         adapters.add(adapter_stickyLayout);
         adapters.add(adapter_floatLayout);
         adapters.add(adapter_fixLayout);
+        adapters.add(adapter_columnLayou);
+        adapters.add(adapter_singleLayout);
+        adapters.add(adapter_onePlusNLayout);
+        adapters.add(adapter_staggeredGridLayout);
 
         DelegateAdapter adapter = new DelegateAdapter(layoutManager);
 
         adapter.setAdapters(adapters);
 
+        recycler_view.setAdapter(adapter);
 
         /**
-         * 步骤5:设置适配器
-         */
-        recycler_view.setAdapter(adapter);
+         *
+         * 步骤7:设置分割线 & Item之间的间隔
+         **/
+        //recyclerView.addItemDecoration(new DividerItemDecoration(this, layoutManager
+        // .getOrientation()));
+        // 需要自定义类DividerItemDecoration
+
+
+        recycler_view.addItemDecoration(new RecyclerView.ItemDecoration() {
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView
+                    .State state) {
+                outRect.set(5, 5, 5, 5);
+            }
+        });
+
+//        recycler_view.addItemDecoration(new DividerItemDecoration(this, layoutManager
+//                .getOrientation()));
 
     }
 
-
     @Override
     public void onItemClick(View view, int postion) {
+        Toast.makeText(this, (String) listItem.get(postion).get("ItemTitle"), Toast.LENGTH_SHORT)
+                .show();
     }
 }
