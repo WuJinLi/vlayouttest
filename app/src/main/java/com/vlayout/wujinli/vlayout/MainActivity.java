@@ -33,22 +33,25 @@ public class MainActivity extends AppCompatActivity implements MyItemClickListen
     private RecyclerView recycler_view;
     private List<HashMap<String, Object>> listItem;
     private MyAdapter_DelegateAdapter
-                                        adapter_linearLayout,
-                                        adapter_stickyLayout,
-                                        adapter_scrollFixLayout,
-                                        adapter_gridLayout,
-                                        adapter_floatLayout,
-                                        adapter_fixLayout,
-                                        adapter_columnLayou,
-                                        adapter_singleLayout,
-                                        adapter_onePlusNLayout,
-                                        adapter_staggeredGridLayout;
+            adapter_linearLayout,
+            adapter_stickyLayout,
+            adapter_scrollFixLayout,
+            adapter_gridLayout,
+            adapter_floatLayout,
+            adapter_fixLayout,
+            adapter_columnLayou,
+            adapter_singleLayout,
+            adapter_onePlusNLayout,
+            adapter_staggeredGridLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initView();
+    }
 
+    private void initView() {
         /**
          * 步骤1：创建RecyclerView & VirtualLayoutManager 对象并进行绑定
          */
@@ -511,7 +514,6 @@ public class MainActivity extends AppCompatActivity implements MyItemClickListen
 
 //        recycler_view.addItemDecoration(new DividerItemDecoration(this, layoutManager
 //                .getOrientation()));
-
     }
 
     @Override
